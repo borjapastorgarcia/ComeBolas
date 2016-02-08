@@ -82,9 +82,9 @@ public class Bola {
             textpaint.setColor(Color.WHITE);
             textpaint.setStyle(Paint.Style.FILL);
             textpaint.setTextSize(64);
-            canvas.drawText("Se ha golpeado la pared", 0, 64, textpaint);
+            canvas.drawText("Se ha golpeado la pared", canvasWidth/2, 64, textpaint);
             canvas.drawBitmap(bmp,x,y, null);
-            gameView.vibrate(gameView.getContext());
+            gameView.vibrate(gameView.getContext(),300);
             gameView.getGameLoopThread().terminate();
         }
 
