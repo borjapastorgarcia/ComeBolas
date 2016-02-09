@@ -1,10 +1,14 @@
 package com.example.borja.comebolas;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.RemoteException;
 import android.os.Vibrator;
 import android.util.Log;
 
@@ -12,8 +16,8 @@ import android.util.Log;
  * Created by borja on 24/01/2016.
  */
 public class Bola {
-    static float x;
-    static float y;
+    static int x;
+    static int y;
     private int mColumnWidth=1;
     private int mColumnHeight=1;
     static float canvasHeigth;
@@ -22,7 +26,6 @@ public class Bola {
     private float newY;
     private float factorX;
     private float factorY;
-    private float score;
     private Canvas canvas;
     private boolean gameOver=false;
     boolean posicionInicial=true;
@@ -41,17 +44,14 @@ public class Bola {
         x+=factorX;
         y+=factorY;
         primerToque=false;
-        score+=0.5;
      //   Log.e("mostrar",""+x+"----"+y);
         comprobarColisionConParedes(x, y);
-        comprobarColisionConObjeto(x, y);
     }
-    public void comprobarColisionConObjeto(float x, float y){
-
+    public boolean comprobarColisionConObjeto(Rect bola, Rect enemigo){
+        return Rect.intersects(bola,enemigo);
     }
     public void comprobarColisionConParedes(float x,float y){
         if((x<64||x>=canvasWidth-(64+bmp.getWidth()))||(y<64||(y>=canvasHeigth-(64+bmp.getHeight())))){
-
             gameOver=true;
         }
     }
@@ -70,7 +70,7 @@ public class Bola {
             if(posicionInicial) {
                 x= canvas.getWidth()/2-bmp.getWidth()/2;
                 y=canvas.getHeight()/2-bmp.getHeight()/2;
-                Log.e("Posicion inicial",""+x+"----"+y);
+              //  Log.e("Posicion inicial",""+x+"----"+y);
                 canvasHeigth=canvas.getHeight();
                 canvasWidth=canvas.getWidth();
             }
@@ -82,16 +82,23 @@ public class Bola {
             textpaint.setColor(Color.WHITE);
             textpaint.setStyle(Paint.Style.FILL);
             textpaint.setTextSize(64);
-            canvas.drawText("Se ha golpeado la pared", canvasWidth/2, 64, textpaint);
+            canvas.drawText("Se ha golpeado la pared", 64, canvasHeigth/2, textpaint);
             canvas.drawBitmap(bmp,x,y, null);
             gameView.vibrate(gameView.getContext(),300);
-            gameView.getGameLoopThread().terminate();
+            try {
+                gameView.getGameLoopThread().sleep(1000);
+                gameView.getGameLoopThread().terminate();
+                Intent i = new Intent(this.gameView.getContext(), MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.gameView.getContext().startActivity(i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
-
-
-    public float getScore() {
-        return score;
+    public Rect getBounds(){
+        return new Rect(this.x,this.y,this.x+bmp.getWidth(),this.y+bmp.getHeight());
     }
 }
