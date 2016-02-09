@@ -16,8 +16,8 @@ import android.util.Log;
  * Created by borja on 24/01/2016.
  */
 public class Bola {
-    static int x;
-    static int y;
+    static float x;
+    static float y;
     private int mColumnWidth=1;
     private int mColumnHeight=1;
     static float canvasHeigth;
@@ -30,19 +30,20 @@ public class Bola {
     private boolean gameOver=false;
     boolean posicionInicial=true;
     boolean primerToque=true;
+    private float vspeed=1;
     Bitmap bmp;
     VistaJuego gameView;
     private int width, height;
     public Bola(VistaJuego gameView, Bitmap bmp){
         this.gameView=gameView;
-        Log.e("Se crea la bola","-----ENTRA"+x+","+y);
+       // Log.e("Se crea la bola","-----ENTRA"+x+","+y);
         this.bmp=bmp;
         this.width=bmp.getWidth()/mColumnWidth;
         this.height=bmp.getHeight()/mColumnHeight;
     }
     public void update(){
-        x+=factorX;
-        y+=factorY;
+        x+=factorX*vspeed;
+        y+=factorY*vspeed;
         primerToque=false;
      //   Log.e("mostrar",""+x+"----"+y);
         comprobarColisionConParedes(x, y);
@@ -61,7 +62,6 @@ public class Bola {
         newY=coordY;
         factorX=(newX-x)/5;
         factorY=(newY-y)/5;
-      //  primerToque=true;
     }
     public void onDraw(Canvas canvas){
        // Log.e("ONDRAW","ONDRAW de bola");
@@ -76,7 +76,7 @@ public class Bola {
             }
             update();
             canvas.drawBitmap(bmp,x,y, null);
-        }else{//se acabo el juego
+        }else{ //se acabo el juego
             //update();
             Paint textpaint = new Paint();
             textpaint.setColor(Color.WHITE);
@@ -94,11 +94,20 @@ public class Bola {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+        gameView.getMusica().stop();
         }
 
     }
     public Rect getBounds(){
-        return new Rect(this.x,this.y,this.x+bmp.getWidth(),this.y+bmp.getHeight());
+        return new Rect((int)this.x,(int)this.y,(int)this.x+bmp.getWidth(),(int)this.y+bmp.getHeight());
     }
+
+    public float getVspeed() {
+        return vspeed;
+    }
+
+    public void setVspeed(float vspeed) {
+        this.vspeed = vspeed;
+    }
+
 }

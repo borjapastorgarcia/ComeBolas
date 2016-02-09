@@ -1,21 +1,18 @@
 package com.example.borja.comebolas;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +20,16 @@ import java.util.List;
  * Created by borja on 24/01/2016.
  */
 public class VistaJuego extends SurfaceView {
+    private MediaPlayer musica,mpComida;
+    SoundPool soundPool;
+    int idMusica,idSonido;
     private Bitmap bmp;
     public int contadorDraws=0;
     private GameLoopThread gameLoopThread;
     private SurfaceHolder holder;
-    private float width=this.getWidth();
-    private float heigth=this.getHeight();
     private Bola bola;
     private static Context mContext;
     private List<Bitmap> temps = new ArrayList<Bitmap>();
-    // private List<TempSprite>temps=new ArrayList<>();
     public float score;
     public VistaJuego (Context context) {
         super(context);
@@ -55,10 +52,14 @@ public class VistaJuego extends SurfaceView {
             }
         });
 
-        width=this.getWidth();
-        heigth=this.getHeight();
+        soundPool = new SoundPool(8, AudioManager.STREAM_MUSIC, 0);
+        idMusica= soundPool.load(mContext,R.raw.musica,1);
+        musica=MediaPlayer.create(mContext,R.raw.musica);
+        musica.start();
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.rsz_pokeball);
         bola=new Bola(this,bmp);
+
+        //metemos imagenes en array
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.bulbasaur));
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.caterpie));
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.charmander));
@@ -86,10 +87,7 @@ public class VistaJuego extends SurfaceView {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        Paint textpaint = new Paint();
-
-        textpaint.setTextSize(32);
-        canvas.drawText("Score: "+String.valueOf(score), 0, 32, textpaint);
+        //dibujamos score
         canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.forest1), 0, 0, null);
         for(int i=0;i<canvas.getHeight();i+=32){//dibujar paredes laterales
             Paint paint = new Paint();
@@ -103,6 +101,7 @@ public class VistaJuego extends SurfaceView {
         }
         bola.onDraw(canvas);
         TempSprite tempSprite=new TempSprite(this,temps);
+
         if(contadorDraws==0) {
             tempSprite.bmp = BitmapFactory.decodeResource(getResources(), R.drawable.bulbasaur);//el primero para que no de null
             tempSprite.x=(int)(Math.random() * (canvas.getWidth()-32));
@@ -112,23 +111,38 @@ public class VistaJuego extends SurfaceView {
             tempSprite.onDraw(canvas);
         contadorDraws++;
         if(tempSprite.checkCollision(bola.getBounds(),tempSprite.getBounds())){
-            Paint golpeado = new Paint();
-            textpaint.setColor(Color.WHITE);
-            textpaint.setStyle(Paint.Style.FILL);
-            textpaint.setTextSize(64);
-            canvas.drawText("Se ha golpeado el objeto", 64, canvas.getHeight()/2, textpaint);
+            score+=500;
+            bola.setVspeed(bola.getVspeed()+0.25f);
+            tempSprite.onDraw(canvas);
+            //sonar y vibrar
+
+            idSonido= soundPool.load(mContext,R.raw.arrow,1);
+            mpComida=MediaPlayer.create(mContext,R.raw.arrow);
+            mpComida.start();
+            vibrate(mContext,100);
         }
+
+        Paint textpaint = new Paint();
+        textpaint.setColor(Color.WHITE);
+        textpaint.setStyle(Paint.Style.FILL);
+        textpaint.setTextSize(32);
+        canvas.drawText("SCORE: "+String.valueOf(score), 50, 50, textpaint);
+
+        //velocidad
+        Paint velocidad = new Paint();
+        velocidad.setColor(Color.WHITE);
+        velocidad.setStyle(Paint.Style.FILL);
+        velocidad.setTextSize(32);
+        canvas.drawText("VELOCIDAD: "+bola.getVspeed(), 400, 50, velocidad);
     }
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-      //  Log.e("ENtra a onTouchEvent","-----ENTRA"+e.getX()+","+e.getY());
         bola.onTouch(e.getX(), e.getY());
         return false;
     }
     public  void vibrate(Context context, int miliseconds){
         // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 300 milliseconds
         v.vibrate(miliseconds);
     }
 
@@ -137,5 +151,9 @@ public class VistaJuego extends SurfaceView {
     }
     public GameLoopThread getGameLoopThread() {
         return gameLoopThread;
+    }
+
+    public MediaPlayer getMusica() {
+        return musica;
     }
 }

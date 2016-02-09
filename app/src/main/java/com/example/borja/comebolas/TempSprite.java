@@ -31,7 +31,7 @@ public class TempSprite {
     public void onDraw(Canvas c){
        // Log.i("entraONDraw","xxxx"+x+",y-->"+y);
         float aleatorio=(float) Math.random()*100;
-        Log.i("ALEATORIO","num-->"+aleatorio);
+    //    Log.i("ALEATORIO","num-->"+aleatorio);
         if(aleatorio>90){//cambia el bitmap
             update();//actualiza la posicion del objeto
             posicion=(int)(Math.random()*listaBitmap.size());
@@ -39,25 +39,6 @@ public class TempSprite {
         }
         c.drawBitmap(bmp, x, y, null);
     }
-
-    /*public void onDraw(Canvas canvas) {
-        float aleatorio=(float) Math.random()*100;
-        if((aleatorio>80)&&dibujado==false){//poner otra condicion para que cuuando este dibujado no se bo
-            Log.i("ONDRAW","ENEMIGO");
-            dibujado=true;
-            canvas.drawBitmap(bmp, x, y, null);
-        }
-        if(dibujado){
-            Log.i("PERMANECE","XXX"+tiempoSprite);
-            if(tiempoSprite>=tiempoMaxSprite){
-                update();
-                Log.i("BORRAMOS SPRITE","XXX");
-                dibujado=false;
-                tiempoSprite=0;
-            }
-            tiempoSprite++;
-        }
-    }*/
     private void update() {
         x=(int)(Math.random() * (gameView.getWidth()-32));
         y=(int)(Math.random() * (gameView.getHeight()-32));
@@ -69,6 +50,5 @@ public class TempSprite {
 
     public boolean checkCollision(Rect bola, Rect enemigo){
         return Rect.intersects(bola,enemigo);
-
     }
 }

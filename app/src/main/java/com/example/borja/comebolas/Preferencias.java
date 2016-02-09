@@ -15,7 +15,6 @@ public class Preferencias extends AppCompatActivity {
         setContentView(R.layout.activity_preferencias);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
     }
 
 }
