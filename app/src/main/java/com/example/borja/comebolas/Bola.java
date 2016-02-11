@@ -1,6 +1,8 @@
 package com.example.borja.comebolas;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,6 +35,7 @@ public class Bola {
     private float vspeed=1;
     Bitmap bmp;
     VistaJuego gameView;
+    public int contador=0;
     private int width, height;
     public Bola(VistaJuego gameView, Bitmap bmp){
         this.gameView=gameView;
@@ -83,25 +86,22 @@ public class Bola {
             textpaint.setStyle(Paint.Style.FILL);
             textpaint.setTextSize(64);
             canvas.drawText("Se ha golpeado la pared", 64, canvasHeigth/2, textpaint);
-            canvas.drawBitmap(bmp,x,y, null);
-            gameView.vibrate(gameView.getContext(),300);
-            try {
-                gameView.getGameLoopThread().sleep(1000);
-                gameView.getGameLoopThread().terminate();
-                Intent i = new Intent(this.gameView.getContext(), MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.gameView.getContext().startActivity(i);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        gameView.getMusica().stop();
+            if (contador==0)
+                if(gameView.getmContext().getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE).getBoolean("Vibracion",true))
+                    gameView.vibrate(gameView.getContext(),300);
+            if(contador==10){
+                    gameView.getGameLoopThread().terminate();
+                    Intent i = new Intent(this.gameView.getContext(), MainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.gameView.getContext().startActivity(i);
+                }
+            gameView.getMusica().stop();
+            contador++;
         }
-
     }
     public Rect getBounds(){
         return new Rect((int)this.x,(int)this.y,(int)this.x+bmp.getWidth(),(int)this.y+bmp.getHeight());
     }
-
     public float getVspeed() {
         return vspeed;
     }

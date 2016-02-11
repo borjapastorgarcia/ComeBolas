@@ -2,6 +2,7 @@ package com.example.borja.comebolas;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,14 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     Button btnPreferencias, btnSalir, btnJugar;
+    private SharedPreferences prefs;
+    private boolean vibracion;
+    public boolean isVibracion() {
+        return vibracion;
+    }
+    public void setVibracion(boolean vibracion) {
+        this.vibracion = vibracion;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +52,14 @@ public class MainActivity extends AppCompatActivity {
                 System.exit(0);
             }
         });
+        prefs=getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
     }
+
+    @Override
+    public SharedPreferences getSharedPreferences(String name, int mode) {
+        return super.getSharedPreferences(name, mode);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

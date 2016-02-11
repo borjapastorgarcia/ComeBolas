@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ventanaMain"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.borja.comebolas.MainActivity"
-    tools:showIn="@layout/activity_main">
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@drawable/images_of_balls"
-    android:layout_alignParentStart="true"
-    android:scaleType="centerCrop" />
+    tools:showIn="@layout/activity_main"
+    android:backgroundTintMode="src_atop">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="JUGAR"
         android:id="@+id/btnJugar"
+        android:textStyle="bold|italic"
+        android:textColor="@color/white"
+        android:background="@android:color/transparent"
+        android:textSize="@android:dimen/app_icon_size"
         android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/btnSalir"
-        android:textStyle="bold|italic" />
+        android:layout_centerHorizontal="true" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OPCIONES"
         android:id="@+id/btnOpciones"
-        android:layout_marginTop="16dp"
         android:layout_below="@+id/btnJugar"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:background="@android:color/transparent"
+        android:textSize="@android:dimen/app_icon_size"
         android:textStyle="bold|italic" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SALIR"
         android:id="@+id/btnSalir"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/btnOpciones"
-        android:layout_alignStart="@+id/btnOpciones"
-        android:textStyle="bold|italic" />
+        android:layout_below="@+id/btnRecords"
+        android:textColor="@color/white"
+        android:background="@android:color/transparent"
+        android:textSize="@android:dimen/app_icon_size"
+        android:textStyle="bold|italic"
+        android:layout_alignStart="@+id/btnJugar" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,5 +54,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
         android:textSize="60dp"
-        android:textColor="@color/primary_material_light"/>
+        android:textColor="@color/white"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:text="RÉCORDS"
+        android:id="@+id/btnRecords"
+        android:layout_below="@+id/btnOpciones"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:background="@android:color/transparent"
+        android:textSize="@android:dimen/app_icon_size"
+        android:textStyle="bold|italic"/>
 </RelativeLayout>

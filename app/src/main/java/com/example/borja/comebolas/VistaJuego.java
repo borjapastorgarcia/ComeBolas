@@ -31,6 +31,7 @@ public class VistaJuego extends SurfaceView {
     private static Context mContext;
     private List<Bitmap> temps = new ArrayList<Bitmap>();
     public float score;
+    private Bitmap pared;
     public VistaJuego (Context context) {
         super(context);
         mContext=context;
@@ -82,6 +83,8 @@ public class VistaJuego extends SurfaceView {
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.vulpix));
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.weedle));
         temps.add(BitmapFactory.decodeResource(getResources(), R.drawable.wigglytuff));
+
+        pared=BitmapFactory.decodeResource(getResources(), R.drawable.brick);
         //Log.e("Se crea la bola","--ENTRA" +width+","+heigth);
     }
     @Override
@@ -91,13 +94,13 @@ public class VistaJuego extends SurfaceView {
         canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.forest1), 0, 0, null);
         for(int i=0;i<canvas.getHeight();i+=32){//dibujar paredes laterales
             Paint paint = new Paint();
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.brick), 0, i, paint);
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.brick), canvas.getWidth()-64,i , paint);
+            canvas.drawBitmap(pared, 0, i, paint);
+            canvas.drawBitmap(pared, canvas.getWidth()-64,i , paint);
         }
         for(int i=32;i<canvas.getWidth()-32;i+=32){//dibujar paredes sup e inf
             Paint paint = new Paint();
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.brick), i, 0, paint);
-            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.brick), i,canvas.getHeight()-64 , paint);
+            canvas.drawBitmap(pared, i, 0, paint);
+            canvas.drawBitmap(pared, i,canvas.getHeight()-64 , paint);
         }
         bola.onDraw(canvas);
         TempSprite tempSprite=new TempSprite(this,temps);
@@ -109,17 +112,17 @@ public class VistaJuego extends SurfaceView {
             TempSprite.posicion=0;
         }
             tempSprite.onDraw(canvas);
-        contadorDraws++;
+            contadorDraws++;
         if(tempSprite.checkCollision(bola.getBounds(),tempSprite.getBounds())){
-            score+=500;
-            bola.setVspeed(bola.getVspeed()+0.25f);
-            tempSprite.onDraw(canvas);
-            //sonar y vibrar
 
+            //sonar y vibrar
             idSonido= soundPool.load(mContext,R.raw.arrow,1);
             mpComida=MediaPlayer.create(mContext,R.raw.arrow);
             mpComida.start();
             vibrate(mContext,100);
+            score+=500;
+            bola.setVspeed(bola.getVspeed()+0.25f);
+            tempSprite.onDraw(canvas,true);
         }
 
         Paint textpaint = new Paint();
@@ -155,5 +158,9 @@ public class VistaJuego extends SurfaceView {
 
     public MediaPlayer getMusica() {
         return musica;
+    }
+
+    public Bitmap getPared() {
+        return pared;
     }
 }

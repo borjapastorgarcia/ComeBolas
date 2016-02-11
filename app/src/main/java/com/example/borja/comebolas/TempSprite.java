@@ -39,9 +39,18 @@ public class TempSprite {
         }
         c.drawBitmap(bmp, x, y, null);
     }
+    public void onDraw(Canvas c,boolean dibujaNuevo){
+        if(dibujaNuevo){
+            update();//actualiza la posicion del objeto
+            posicion=(int)(Math.random()*listaBitmap.size());
+            bmp=(Bitmap)listaBitmap.get(posicion);
+             c.drawBitmap(bmp, x, y, null);
+        }
+
+    }
     private void update() {
-        x=(int)(Math.random() * (gameView.getWidth()-32));
-        y=(int)(Math.random() * (gameView.getHeight()-32));
+        x=(int)(Math.random() * (gameView.getWidth()-gameView.getPared().getWidth()*2))+gameView.getPared().getWidth();
+        y=(int)(Math.random() * (gameView.getHeight()-gameView.getPared().getHeight()*2))+gameView.getPared().getHeight();
 
     }
     public Rect getBounds(){
